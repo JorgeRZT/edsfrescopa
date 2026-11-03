@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{seoTitle}}</title>
+  <meta name="description" content="{{description}}">
+</head>
+<body>
+<header></header>
+<main>
+  <div>
+    <div class="teaser dark right frescopa-background-yellow">
+      <div><div><picture><img src="{{heroImage.src}}" alt="{{heroImage.alt}}"></picture></div></div>
+      <div><div>{{eyebrow}}</div></div>
+      <div><div><h1>{{title}}</h1></div></div>
+      <div><div><p>{{intro}}</p></div></div>
+      <div><div></div></div>
+      <div><div><p><strong><a href="/coffee">Shop all coffee</a></strong></p></div></div>
+      <div><div><p><em><a href="/integrations/byom">See the BYOM page</a></em></p></div></div>
+    </div>
+  </div>
+  <div>
+    <h2>On the roaster today</h2>
+    <p>{{products.length}} coffees, updated {{updated}}. Change the JSON, preview the page, and this list changes. No author touches a document.</p>
+    <div class="product-list-page-custom">
+      {{#products}}
+      <div>
+        <div><picture><img src="{{image}}" alt="{{name}}"></picture></div>
+        <div>{{name}}</div>
+        <div>{{description}} Roast: {{roast}}. Origin: {{origin}}.</div>
+        <div>{{price}}</div>
+      </div>
+      {{/products}}
+    </div>
+  </div>
+  <div>
+    <h2>Roaster's picks</h2>
+    <div class="cards">
+      {{#products}}{{#featured}}
+      <div>
+        <div><picture><img src="{{image}}" alt="{{name}}"></picture></div>
+        <div><h3>{{name}}</h3><p>{{roast}} roast from {{origin}}. {{price}}</p></div>
+      </div>
+      {{/featured}}{{/products}}
+    </div>
+  </div>
+  {{#hasBrewGuide}}
+  <div>
+    <h2>Brew guide</h2>
+    <div class="table">
+      <div><div>Method</div><div>Ratio</div><div>Time</div><div>Tip</div></div>
+      {{#brewGuide}}
+      <div><div>{{method}}</div><div>{{ratio}}</div><div>{{time}}</div><div>{{tip}}</div></div>
+      {{/brewGuide}}
+    </div>
+    <p>How this page is built: <a href="https://github.com/JorgeRZT/edsfrescopa/blob/main/docs/json2html.md">docs/json2html.md</a>.</p>
+  </div>
+  {{/hasBrewGuide}}
+  <div>
+    <div class="metadata">
+      <div><div>Title</div><div>{{seoTitle}}</div></div>
+      <div><div>Description</div><div>{{description}}</div></div>
+      <div><div>Image</div><div><picture><img src="{{heroImage.src}}" alt=""></picture></div></div>
+      <div><div>Content Source</div><div>json2html: my-custom-api JSON + templates/json2html/todays-roasts.html</div></div>
+    </div>
+  </div>
+</main>
+<footer></footer>
+</body>
+</html>
