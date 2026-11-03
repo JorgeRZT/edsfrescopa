@@ -3,6 +3,7 @@
 <head>
   <title>{{seoTitle}}</title>
   <meta name="description" content="{{description}}">
+  <meta property="og:image" content="{{heroImage.src}}">
 </head>
 <body>
 <header></header>
@@ -55,14 +56,6 @@
     <p>How this page is built: <a href="https://github.com/JorgeRZT/edsfrescopa/blob/main/docs/json2html.md">docs/json2html.md</a>.</p>
   </div>
   {{/hasBrewGuide}}
-  <div>
-    <div class="metadata">
-      <div><div>Title</div><div>{{seoTitle}}</div></div>
-      <div><div>Description</div><div>{{description}}</div></div>
-      <div><div>Image</div><div><picture><img src="{{heroImage.src}}" alt=""></picture></div></div>
-      <div><div>Content Source</div><div>json2html: my-custom-api JSON + templates/json2html/todays-roasts.html</div></div>
-    </div>
-  </div>
 </main>
 <footer></footer>
 </body>

@@ -21,6 +21,17 @@ The source is an xwalk site (Universal Editor + AEM Author) with Adobe Commerce 
 
 The source references a few DAM assets that return 404 (for example `AdobeStock_278243111.jpeg` and the `/rise-and-shine` mp4). Those were dropped.
 
+## Integrations: BYOM, json2html and edge workers
+
+Two pages are not authored in DA. Their content comes from an external service ([my-custom-api](https://my-custom-api.lopezpellicerjorge.workers.dev/llms.txt), a Cloudflare Worker):
+
+| Page | Technique | How |
+| --- | --- | --- |
+| [/integrations/byom](https://main--edsfrescopa--jorgerzt.aem.page/integrations/byom) | BYOM | The site's content **overlay** points at my-custom-api, which returns finished EDS HTML. Other paths return 404 there and fall back to da.live. See [docs/byom.md](docs/byom.md). |
+| [/integrations/json2html](https://main--edsfrescopa--jorgerzt.aem.page/integrations/json2html) | json2html | The overlay returns a 302 to Adobe's json2html worker. The worker renders JSON from my-custom-api with [`templates/json2html/todays-roasts.html`](templates/json2html/todays-roasts.html). See [docs/json2html.md](docs/json2html.md). |
+
+Both pages are built when they are previewed or published. For per-request logic at the CDN (AEM Edge Functions), and how all these pieces fit together, see [docs/edge-workers.md](docs/edge-workers.md).
+
 ## Development
 
 ```sh
