@@ -1,5 +1,4 @@
 import {
-  buildBlock,
   loadHeader,
   loadFooter,
   decorateButtons,
@@ -11,25 +10,58 @@ import {
   loadSection,
   loadSections,
   loadCSS,
-  sampleRUM,
   readBlockConfig,
   toClassName,
   toCamelCase,
 } from './aem.js';
 
+export const NX_ORIGIN = 'https://da.live/nx';
+
+export const LOCALES = ['es', 'fr', 'jp'];
+const LANG_MAP = { es: 'es', fr: 'fr', jp: 'ja' };
+
 /**
- * Builds hero block and prepends to main in a new section.
- * @param {Element} main The container element
+ * Returns the locale root of the current page ('' for the English root, '/es', '/fr', '/jp').
+ * @returns {string}
  */
-function buildHeroBlock(main) {
-  const h1 = main.querySelector('h1');
-  const picture = main.querySelector('picture');
-  // eslint-disable-next-line no-bitwise
-  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
-    const section = document.createElement('div');
-    section.append(buildBlock('hero', { elems: [picture, h1] }));
-    main.prepend(section);
-  }
+export function getRootPath() {
+  const [first] = window.location.pathname.split('/').filter(Boolean);
+  return LOCALES.includes(first) ? `/${first}` : '';
+}
+
+/**
+ * Prefixes a root-relative link with the current locale root.
+ * @param {string} link url to be localized
+ * @returns {string} The localized link
+ */
+export function rootLink(link) {
+  const root = getRootPath();
+  if (!root || link.startsWith(`${root}/`) || link === root) return link;
+  return `${root}${link}`;
+}
+
+/**
+ * Checks whether an image URL is served from this site's own origin.
+ * @param {string} src The image URL (absolute or relative)
+ * @returns {boolean} true if the image is same-origin
+ */
+export function isSameOriginImage(src) {
+  return new URL(src, window.location.href).origin === window.location.origin;
+}
+
+/**
+ * Moves instrumentation attributes (UE) from one element to another.
+ * @param {Element} from the element to copy attributes from
+ * @param {Element} to the element to copy attributes to
+ */
+export function moveInstrumentation(from, to) {
+  [...from.attributes]
+    .map(({ nodeName }) => nodeName)
+    .filter((attr) => attr.startsWith('data-aue-') || attr.startsWith('data-richtext-'))
+    .forEach((attr) => {
+      to.setAttribute(attr, from.getAttribute(attr));
+      from.removeAttribute(attr);
+    });
 }
 
 /**
@@ -59,9 +91,10 @@ function autolinkModals(doc) {
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
+// eslint-disable-next-line no-unused-vars
 function buildAutoBlocks(main) {
   try {
-    if (!main.querySelector('.hero')) buildHeroBlock(main);
+    // no auto blocks: the source site (frescopa.coffee) does not use any
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
@@ -139,7 +172,8 @@ export function decorateMain(main) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  doc.documentElement.lang = 'en';
+  const root = getRootPath().substring(1);
+  doc.documentElement.lang = LANG_MAP[root] || 'en';
   decorateTemplateAndTheme();
   if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
     doc.body.dataset.breadcrumbs = true;
@@ -150,8 +184,6 @@ async function loadEager(doc) {
     doc.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
-
-  sampleRUM.enhance();
 
   try {
     /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css */
@@ -181,6 +213,7 @@ async function loadLazy(doc) {
   loadFooter(doc.querySelector('footer'));
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+  loadCSS(`${window.hlx.codeBasePath}/styles/article.css`);
   loadFonts();
 }
 
