@@ -304,6 +304,8 @@ export async function loadRuleEngine(formDef, htmlForm, captcha, genFormRenditio
 async function fetchData({ id }) {
   try {
     const { search = '' } = window.location;
+    // no AEM Forms backend for this DA site: only attempt prefill when explicitly requested
+    if (!search) return null;
     const url = externalize(`/adobe/forms/af/data/${id}${search}`);
     const response = await fetch(url);
     const json = await response.json();
