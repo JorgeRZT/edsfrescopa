@@ -92,6 +92,10 @@ export default function decorate(block) {
         </div>
       </div>
     </div>
+    <div class="mobile-menu">
+      <button type="button" class="toggle-filters">Filters</button>
+      <button type="button" class="toggle-sortby">Sort By</button>
+    </div>
     <div class="list"><ol></ol></div>
     <div class="pagination">
       <div>
@@ -146,6 +150,7 @@ export default function decorate(block) {
   };
 
   sortButton.addEventListener('click', () => overlay.classList.toggle('active'));
+  container.querySelector('.toggle-sortby').addEventListener('click', () => overlay.classList.toggle('active'));
   overlay.querySelector('.close').addEventListener('click', () => overlay.classList.remove('active'));
 
   renderList();

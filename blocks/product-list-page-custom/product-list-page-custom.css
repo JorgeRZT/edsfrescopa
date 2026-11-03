@@ -503,10 +503,6 @@ main .section.product-list-page-custom-container > .default-content-wrapper h1:f
 }
 
 .product-list-page-custom .products .list > ol > li .name {
-  line-height: 1;
-}
-
-.product-list-page-custom .products .list > ol > li .name a {
   font: normal normal 300 32px/42px Baskerville, serif;
   letter-spacing: 0;
   display: inline-block;
@@ -516,11 +512,7 @@ main .section.product-list-page-custom-container > .default-content-wrapper h1:f
   margin-top: 20px;
 }
 
-.product-list-page-custom .products .list > ol > li .name a:hover {
-  color: var(--color-brand-700);
-}
-
-.product-list-page-custom .products .list > ol > li .description a {
+.product-list-page-custom .products .list > ol > li .description {
   font: normal normal 300 18px/24px Roboto, sans-serif;
   max-width: 340px;
   letter-spacing: 0;
