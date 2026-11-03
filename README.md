@@ -1,24 +1,30 @@
-# AEM Block Collection
+# Fréscopa on AEM Edge Delivery Services + Document Authoring
 
-This project provides a foundation for starting an AEM Edge Delivery Services project. It includes many common blocks and features a project might need.
+A migration of [frescopa.coffee](https://frescopa.coffee/) to an AEM Edge Delivery Services project with content in Document Authoring (da.live). It is built on the [`aemsites/da-block-collection`](https://github.com/aemsites/da-block-collection) template. The visual blocks, styles, fonts and icons are ported from the source project [`aem-showcase/frescopa`](https://github.com/aem-showcase/frescopa) (Apache-2.0).
 
-## DA compatible
+- **Content (DA):** https://da.live/#/jorgerzt/edsfrescopa. Pages are in the root (EN), `/en/`, `/es/`, `/fr/` and `/jp/`. Images are in `/media/`, header and footer in `nav` and `footer` (plus `/<locale>/nav|footer`), and the enquiry form in `/forms/enquire`.
+- **Preview:** https://main--edsfrescopa--jorgerzt.aem.page/. This is a demo site and is not published to `.aem.live`. `head.html` sets `noindex, nofollow`.
 
-This specific repo has been _slightly_ modified to be compatible with DA's live preview.
+## Differences from the source site
 
-## Getting started
+The source is an xwalk site (Universal Editor + AEM Author) with Adobe Commerce drop-ins. In this project:
 
-### 1. Github
-1. Use this template to make a new repo.
-1. Install [AEM Code Sync](https://github.com/apps/aem-code-sync).
+| Area | Source | Here |
+| --- | --- | --- |
+| `offer`, `article`, `quiz` | AEM Content Fragments via GraphQL persisted queries | Fragment data captured at migration time and authored as rows in the block table (see each block's JS header comment). The quiz is plain JS with no React. |
+| `product-list-page-custom` (coffee, tea, machines, accessories, `/products`) | Adobe Commerce catalog service | Static rows (`image \| name \| description \| price`) captured from the rendered source. Client-side sorting and the product count still work. The links to product detail pages are removed. |
+| `store-locator` | Google Maps + location API | Static panel (title, CTA, post-code field) with an illustrated map background. |
+| Header | Commerce mini-cart, auth, CUG, search autocomplete | Same look. The cart, account and sign-in are visual only. Search posts to `/search`. An EN/ES/FR/JP language switcher was added. Each locale loads its own `/<locale>/nav`. |
+| Forms (`form`, `embed-adaptive-form`) | AEM Forms | Form definitions are kept in the DA documents. They render fully, but there is no submission or prefill backend. |
+| `dm-video`, `dm-scene7-template`, `video`, Dynamic Media images | Dynamic Media | Unchanged; they still load from the source DM delivery hosts. The DM player on `/sustainability` fails on the source as well. |
+| Experimentation, UE instrumentation, importmap, commerce drop-ins | yes | removed |
 
-### 2. DA content
-1. Browse to https://da.live/start.
-2. Follow the steps.
+The source references a few DAM assets that return 404 (for example `AdobeStock_278243111.jpeg` and the `/rise-and-shine` mp4). Those were dropped.
 
-### 3. Local development
-1. Clone your new repo to your computer.
-1. Install the AEM CLI using your terminal: `sudo npm install -g @adobe/aem-cli`
-1. Start the AEM CLI: `aem up`.
-1. Open the `{repo}` folder in your favorite code editor and buil something.
-1. **Recommended:** Install common npm packages like linting and testing: `npm i`.
+## Development
+
+```sh
+npm ci
+npm run lint
+aem up   # local dev with @adobe/aem-cli
+```
