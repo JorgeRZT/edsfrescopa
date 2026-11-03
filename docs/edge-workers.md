@@ -125,4 +125,5 @@ Without the Adobe Managed CDN, many EDS sites put their own CDN in front of `aem
 | Markup already exists in another system | BYOM |
 | Data is JSON and the page is a template over it | json2html |
 | Varies per visitor or second, or needs secrets | AEM Edge Functions (or a BYO CDN worker) |
+| Members-only area | Edge login + protected site; see [private-area.md](private-area.md) |
 | Small interactive behaviour in the page | A block (client-side JS) |

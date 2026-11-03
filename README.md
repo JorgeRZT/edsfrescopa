@@ -32,6 +32,11 @@ Two pages are not authored in DA. Their content comes from an external service (
 
 Both pages are built when they are previewed or published. For per-request logic at the CDN (AEM Edge Functions), and how all these pieces fit together, see [docs/edge-workers.md](docs/edge-workers.md).
 
+- **Architecture:** [docs/architecture.md](docs/architecture.md) shows how EDS, content sources (da.live, AEM Sites, commerce, headless CMS), the BYOM and json2html integrations, the code repo (GitHub or BYOGit) and the Adobe CDN fit together.
+
+  ![Architecture](docs/architecture.svg)
+- **Private areas:** [docs/private-area.md](docs/private-area.md) covers site authentication and a members-only section using edge login, a protected repoless site and a site token.
+
 ## Development
 
 ```sh
