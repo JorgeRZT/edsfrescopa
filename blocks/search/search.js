@@ -3,6 +3,14 @@ import {
   decorateIcons,
   fetchPlaceholders,
 } from '../../scripts/aem.js';
+import { getRootPath } from '../../scripts/scripts.js';
+
+const LABELS = {
+  '': { searchPlaceholder: 'Search...', searchNoResults: 'No results found.' },
+  '/es': { searchPlaceholder: 'Buscar...', searchNoResults: 'No se han encontrado resultados.' },
+  '/fr': { searchPlaceholder: 'Rechercher...', searchNoResults: 'Aucun résultat.' },
+  '/jp': { searchPlaceholder: '検索...', searchNoResults: '結果が見つかりません。' },
+};
 
 const searchParams = new URLSearchParams(window.location.search);
 
@@ -80,7 +88,8 @@ export async function fetchData(source) {
     return null;
   }
 
-  return json.data;
+  // the index keeps every published page; pages marked noindex are hidden client-side
+  return json.data.filter((row) => !/noindex/i.test(row.robots || ''));
 }
 
 function renderResult(result, searchTerms, titleTag) {
@@ -251,8 +260,10 @@ function searchBox(block, config) {
 }
 
 export default async function decorate(block) {
-  const placeholders = await fetchPlaceholders();
-  const source = block.querySelector('a[href]') ? block.querySelector('a[href]').href : '/query-index.json';
+  const root = getRootPath();
+  const placeholders = { ...(LABELS[root] || LABELS['']), ...(await fetchPlaceholders()) };
+  // each language has its own index: /query-index.json (en), /es/query-index.json, ...
+  const source = block.querySelector('a[href]') ? block.querySelector('a[href]').href : `${root}/query-index.json`;
   block.innerHTML = '';
   block.append(
     searchBox(block, { source, placeholders }),

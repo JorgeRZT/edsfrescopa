@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /drafts/
+Disallow: /forms/
+
+Sitemap: https://main--edsfrescopa--jorgerzt.aem.live/sitemap-index.xml

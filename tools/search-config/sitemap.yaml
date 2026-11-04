@@ -1,0 +1,26 @@
+sitemaps:
+  frescopa:
+    origin: https://main--edsfrescopa--jorgerzt.aem.live
+    lastmod: YYYY-MM-DD
+    default: en
+    languages:
+      en:
+        source: /query-index.json
+        destination: /sitemap-en.xml
+        hreflang: en
+        alternate: /{path}
+      es:
+        source: /es/query-index.json
+        destination: /sitemap-es.xml
+        hreflang: es
+        alternate: /es/{path}
+      fr:
+        source: /fr/query-index.json
+        destination: /sitemap-fr.xml
+        hreflang: fr
+        alternate: /fr/{path}
+      jp:
+        source: /jp/query-index.json
+        destination: /sitemap-jp.xml
+        hreflang: ja
+        alternate: /jp/{path}
