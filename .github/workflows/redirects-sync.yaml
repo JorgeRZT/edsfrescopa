@@ -1,0 +1,36 @@
+name: Sync redirects from API
+
+# El sistema externo (commerce, PIM, CMS...) avisa con un repository_dispatch
+# cuando cambian sus redirecciones; también se puede lanzar a mano o por cron.
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publicar también en live (aem.live)'
+        type: boolean
+        default: false
+  repository_dispatch:
+    types: [redirects-updated]
+  # schedule:
+  #   - cron: '0 * * * *'
+
+concurrency:
+  group: redirects-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Sync API redirects → da.live redirects sheet
+        env:
+          DA_TOKEN: ${{ secrets.DA_TOKEN }}
+        run: |
+          if [ -z "$DA_TOKEN" ]; then echo "::warning::Falta el secret DA_TOKEN; se hace dry run"; node tools/redirects-sync/sync-redirects.mjs --dry-run; exit 0; fi
+          FLAGS=""
+          if [ "${{ inputs.publish }}" = "true" ] || [ "${{ github.event.client_payload.publish }}" = "true" ]; then FLAGS="--publish"; fi
+          node tools/redirects-sync/sync-redirects.mjs $FLAGS
