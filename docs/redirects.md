@@ -21,7 +21,7 @@ Sheet: [da.live/sheet#/jorgerzt/edsfrescopa/redirects](https://da.live/sheet#/jo
 | [/en/accessories](https://main--edsfrescopa--jorgerzt.aem.page/en/accessories) | /accessories | EW | Page that doesn't exist in `/en` |
 | [/blog/rise-and-shine](https://main--edsfrescopa--jorgerzt.aem.page/blog/rise-and-shine) | /rise-and-shine | EW | Old URL from a previous site structure |
 
-All of them return **301** on the preview site (`aem.page`). The sheet has only been previewed; publish it to make the redirects work on `aem.live`.
+All of them return **301** on preview (`aem.page`) and live (`aem.live`): the sheet is published. After editing it, preview it to test and publish it to apply the change on live.
 
 ## Redirects defined by an API
 

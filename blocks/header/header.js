@@ -239,7 +239,7 @@ export default async function decorate(block) {
   <div class="search-wrapper nav-tools-wrapper">
     <button type="button" class="nav-search-button">Search</button>
     <div class="nav-search-input nav-search-panel nav-tools-panel">
-      <form action="/search" method="GET">
+      <form action="${rootLink('/search')}" method="GET">
         <input id="search" type="search" name="q" placeholder="Search" />
       </form>
     </div>

@@ -3,6 +3,7 @@
 [![AEM Edge Delivery Services](https://img.shields.io/badge/AEM-Edge%20Delivery%20Services-EB1000?logo=adobe&logoColor=white)](https://www.aem.live/)
 [![Document Authoring](https://img.shields.io/badge/content-da.live%20%2F%20Experience%20Workspace-EB1000?logo=adobe&logoColor=white)](https://da.live/#/jorgerzt/edsfrescopa)
 [![Preview](https://img.shields.io/badge/preview-aem.page-1D95E7)](https://main--edsfrescopa--jorgerzt.aem.page/)
+[![Live](https://img.shields.io/badge/live-aem.live-0BA45D)](https://main--edsfrescopa--jorgerzt.aem.live/)
 [![AEM Code Sync](https://img.shields.io/badge/AEM%20Code%20Sync-enabled-0BA45D?logo=github)](https://github.com/apps/aem-code-sync)
 [![Boilerplate](https://img.shields.io/badge/boilerplate-da--block--collection-555)](https://github.com/aemsites/da-block-collection)
 
@@ -15,11 +16,14 @@
 ![BYOM](https://img.shields.io/badge/integration-BYOM-6E3FF3)
 ![json2html](https://img.shields.io/badge/integration-json2html-6E3FF3)
 ![Redirects](https://img.shields.io/badge/redirects-EW%20%2B%20API-6E3FF3)
+![Search](https://img.shields.io/badge/search-query%20index%20%C2%B7%204%20languages-6E3FF3)
+![Sitemaps](https://img.shields.io/badge/sitemaps-hreflang-6E3FF3)
 
 A migration of [frescopa.coffee](https://frescopa.coffee/) to an AEM Edge Delivery Services project with content in Document Authoring (da.live). It is built on the [`aemsites/da-block-collection`](https://github.com/aemsites/da-block-collection) template. The visual blocks, styles, fonts and icons are ported from the source project [`aem-showcase/frescopa`](https://github.com/aem-showcase/frescopa) (Apache-2.0).
 
 - **Content (DA):** https://da.live/#/jorgerzt/edsfrescopa. Pages are in the root (EN), `/en/`, `/es/`, `/fr/` and `/jp/`. Images are in `/media/`, header and footer in `nav` and `footer` (plus `/<locale>/nav|footer`), and the enquiry form in `/forms/enquire`.
-- **Preview:** https://main--edsfrescopa--jorgerzt.aem.page/. This is a demo site and is not published to `.aem.live`. `head.html` sets `noindex, nofollow`.
+- **Preview:** https://main--edsfrescopa--jorgerzt.aem.page/
+- **Live:** https://main--edsfrescopa--jorgerzt.aem.live/. All content pages are published, because the query index (search and sitemaps) only contains published pages. Crawlers are still kept out: EDS always serves `Disallow: /` as `robots.txt` on `*.aem.page` and `*.aem.live`.
 
 ## Differences from the source site
 
@@ -41,9 +45,9 @@ The source references a few DAM assets that return 404 (for example `AdobeStock_
 
 Every capability, integration and use case in this project, and its status:
 
-- ✅ **Implemented:** working in preview (https://main--edsfrescopa--jorgerzt.aem.page).
+- ✅ **Implemented:** working on preview (https://main--edsfrescopa--jorgerzt.aem.page) and live (https://main--edsfrescopa--jorgerzt.aem.live).
 - 🟡 **Partial:** works, with a known gap.
-- 📄 **Documented only:** explained in `docs/`, **not implemented**, because it needs something a demo site does not have (a connected production domain, an identity provider, a publish to live).
+- 📄 **Documented only:** explained in `docs/`, **not implemented**, because it needs something a demo site does not have (a connected production domain, an identity provider).
 
 Nothing here depends on Universal Editor or AEM Author: these are EDS capabilities, used from Experience Workspace (da.live).
 
@@ -64,11 +68,12 @@ Nothing here depends on Universal Editor or AEM Author: these are EDS capabiliti
 | ✅ | **json2html** | External JSON + a Mustache template in the repo = EDS page | [/integrations/json2html](https://main--edsfrescopa--jorgerzt.aem.page/integrations/json2html) | [`templates/json2html`](templates/json2html) · [docs/json2html.md](docs/json2html.md) |
 | ✅ | **Redirects authored in EW** | Authors manage 301s in a sheet; migrations with URL maps | [/cafe](https://main--edsfrescopa--jorgerzt.aem.page/cafe) → /coffee | `redirects` sheet in da.live · [docs/redirects.md](docs/redirects.md) |
 | ✅ | **Redirects defined by an API** | An external system owns some redirects; a GitHub Action syncs them into the same sheet | [/products/cold-brew-kit](https://main--edsfrescopa--jorgerzt.aem.page/products/cold-brew-kit) → /coffee | [`tools/redirects-sync`](tools/redirects-sync), [workflow](.github/workflows/redirects-sync.yaml) · [docs/redirects.md](docs/redirects.md#redirects-defined-by-an-api) |
-| ✅ | **Security baseline** | CSP with nonces moved to an HTTP header, `noindex` on the demo | View source on any page | [`head.html`](head.html) |
+| ✅ | **Security baseline** | CSP with nonces moved to an HTTP header; `noindex` per page through metadata, never global | View source on any page | [`head.html`](head.html) |
+| ✅ | **Site search per language** | Search box in the header and a results page per locale, over a query index generated on publish; no search backend | [/search?q=coffee](https://main--edsfrescopa--jorgerzt.aem.live/search?q=coffee), [/es/search?q=café](https://main--edsfrescopa--jorgerzt.aem.live/es/search?q=caf%C3%A9) | [`blocks/search`](blocks/search), [`query.yaml`](tools/search-config/query.yaml) · [docs/search-and-sitemaps.md](docs/search-and-sitemaps.md) |
+| ✅ | **Sitemaps with hreflang + robots.txt** | SEO: one sitemap per language, alternates between translations, sitemap index referenced from robots | [/sitemap-es.xml](https://main--edsfrescopa--jorgerzt.aem.live/sitemap-es.xml), [/sitemap-index.xml](https://main--edsfrescopa--jorgerzt.aem.live/sitemap-index.xml) | [`sitemap.yaml`](tools/search-config/sitemap.yaml), [`robots.txt`](tools/search-config/robots.txt), [`sitemap-index.xml`](sitemap-index.xml) · [docs/search-and-sitemaps.md](docs/search-and-sitemaps.md) |
 | ✅ | **Performance by design** (eager / lazy / delayed loading) | Lighthouse 100 pattern: first section first, the rest later, third parties after 3 s | Any page | [`scripts/scripts.js`](scripts/scripts.js), [`scripts/delayed.js`](scripts/delayed.js) |
 | ✅ | **CI** | Lint on every push; event-driven or manual content jobs (redirects sync) | [Actions](https://github.com/JorgeRZT/edsfrescopa/actions) | [`.github/workflows`](.github/workflows) |
 | 🟡 | **Forms** (form, embed-adaptive-form) | Forms defined in documents | [/contact-us](https://main--edsfrescopa--jorgerzt.aem.page/contact-us) | Renders fully; **no submission backend** |
-| 🟡 | **Search** | Site search over the query index | [/search](https://main--edsfrescopa--jorgerzt.aem.page/search) | Block present; **query index not configured yet** |
 | 🟡 | **Translations** | Language copies exist; **translation projects in the EW app are not set up** | [/fr/](https://main--edsfrescopa--jorgerzt.aem.page/fr/) | da.live |
 
 ### Documented only (not implemented)
@@ -81,7 +86,7 @@ Nothing here depends on Universal Editor or AEM Author: these are EDS capabiliti
 | 📄 | **Redirects at request time** (wildcards, 302/307/308) | Pattern rules the sheet cannot express | Needs the CDN or Edge Functions (see above) | [docs/redirects.md](docs/redirects.md#other-ways-to-do-it-and-when) |
 | 📄 | **BYO Git** (GitLab, Bitbucket, Azure DevOps, GHE) | Customers that cannot use github.com | Needs Cloud Manager; this repo is on github.com | [docs/architecture.md](docs/architecture.md) |
 | 📄 | **Other content sources** (AEM Sites, commerce, headless CMS) | Mixing content sources behind one site | Shown with BYOM; no real third-party CMS connected | [docs/architecture.md](docs/architecture.md) |
-| — | **Blog** (listing with query index) | Editorial section | Not started | — |
+| — | **Blog** (listing with query index) | Editorial section | Not started; the query index it needs is in place (`template` column) | [docs/search-and-sitemaps.md](docs/search-and-sitemaps.md) |
 
 The external service behind BYOM, json2html and the API redirects is [my-custom-api](https://my-custom-api.lopezpellicerjorge.workers.dev/llms.txt), a Cloudflare Worker that stands in for a commerce, PIM or headless CMS.
 
@@ -115,6 +120,14 @@ The external service behind BYOM, json2html and the API redirects is [my-custom-
 - **How:** EDS only applies the `redirects` sheet, so the API is synced into it. [`tools/redirects-sync/sync-redirects.mjs`](tools/redirects-sync/sync-redirects.mjs) reads [the API](https://my-custom-api.lopezpellicerjorge.workers.dev/api/frescopa/redirects), keeps the authored rows, regenerates the rows with `Origin = API`, writes the sheet to da.live and previews it (or publishes it with `--publish`). Authored rows win on conflict.
 - **Trigger:** the GitHub Action [`.github/workflows/redirects-sync.yaml`](.github/workflows/redirects-sync.yaml), started by the external system (`repository_dispatch`, event `redirects-updated`), by hand or by a cron. It needs the `DA_TOKEN` secret; without it, it only runs a dry run.
 - **Where it lives:** script and workflow in this repo, endpoint `frescopa/redirects` in my-custom-api, rows with `Origin = API` in the same sheet.
+
+### 5. Search and sitemaps
+
+- **What:** a search box in the header and a results page per language ([/search?q=coffee](https://main--edsfrescopa--jorgerzt.aem.live/search?q=coffee), [/es/search](https://main--edsfrescopa--jorgerzt.aem.live/es/search?q=caf%C3%A9)), and one sitemap per language with hreflang alternates ([/sitemap-en.xml](https://main--edsfrescopa--jorgerzt.aem.live/sitemap-en.xml)).
+- **How:** publishing a page indexes it. [`query.yaml`](tools/search-config/query.yaml) defines four indexes (`/query-index.json`, `/es/…`, `/fr/…`, `/jp/…`) with title, description, image, template, robots and lastModified, read from the page `<head>`. The [search block](blocks/search/search.js) fetches the index of the current locale and filters it in the browser, hiding `noindex` pages. [`sitemap.yaml`](tools/search-config/sitemap.yaml) turns the four indexes into `/sitemap-xx.xml` with `hreflang` links between `/coffee`, `/es/coffee`, `/fr/coffee` and `/jp/coffee`.
+- **Where it lives:** block and config files in this repo, pushed to the configuration service with [`tools/search-config/apply-config.mjs`](tools/search-config/apply-config.mjs); `search` pages in da.live with `Robots: noindex` metadata.
+- **When it updates:** on publish or unpublish. Preview-only pages are not indexed.
+- **Details:** [docs/search-and-sitemaps.md](docs/search-and-sitemaps.md).
 
 ## Development
 
