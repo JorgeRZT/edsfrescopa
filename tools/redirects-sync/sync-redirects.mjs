@@ -50,7 +50,9 @@ async function readApi() {
 }
 
 async function readSheet() {
-  const res = await fetch(sheetUrl, { headers: auth });
+  // Sin token (solo dry run) se lee la versión en preview, que es pública.
+  const url = DA_TOKEN ? sheetUrl : `https://${REF}--${SITE}--${ORG}.aem.page/${SHEET}.json`;
+  const res = await fetch(url, { headers: auth });
   if (res.status === 404) return [];
   if (!res.ok) fail(`No se pudo leer ${SHEET}.json en da.live (${res.status})`);
   const json = await res.json();
