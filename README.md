@@ -1,5 +1,21 @@
 # Fréscopa on AEM Edge Delivery Services + Document Authoring
 
+[![AEM Edge Delivery Services](https://img.shields.io/badge/AEM-Edge%20Delivery%20Services-EB1000?logo=adobe&logoColor=white)](https://www.aem.live/)
+[![Document Authoring](https://img.shields.io/badge/content-da.live%20%2F%20Experience%20Workspace-EB1000?logo=adobe&logoColor=white)](https://da.live/#/jorgerzt/edsfrescopa)
+[![Preview](https://img.shields.io/badge/preview-aem.page-1D95E7)](https://main--edsfrescopa--jorgerzt.aem.page/)
+[![AEM Code Sync](https://img.shields.io/badge/AEM%20Code%20Sync-enabled-0BA45D?logo=github)](https://github.com/apps/aem-code-sync)
+[![Boilerplate](https://img.shields.io/badge/boilerplate-da--block--collection-555)](https://github.com/aemsites/da-block-collection)
+
+[![Build](https://github.com/JorgeRZT/edsfrescopa/actions/workflows/main.yaml/badge.svg)](https://github.com/JorgeRZT/edsfrescopa/actions/workflows/main.yaml)
+[![Redirects sync](https://github.com/JorgeRZT/edsfrescopa/actions/workflows/redirects-sync.yaml/badge.svg)](https://github.com/JorgeRZT/edsfrescopa/actions/workflows/redirects-sync.yaml)
+[![License: Apache-2.0](https://img.shields.io/github/license/JorgeRZT/edsfrescopa)](LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/JorgeRZT/edsfrescopa)](https://github.com/JorgeRZT/edsfrescopa/commits/main)
+[![Node](https://img.shields.io/badge/node-%E2%89%A518-339933?logo=nodedotjs&logoColor=white)](package.json)
+[![Vanilla JS](https://img.shields.io/badge/JS-vanilla%2C%20no%20build-F7DF1E?logo=javascript&logoColor=black)](scripts/scripts.js)
+![BYOM](https://img.shields.io/badge/integration-BYOM-6E3FF3)
+![json2html](https://img.shields.io/badge/integration-json2html-6E3FF3)
+![Redirects](https://img.shields.io/badge/redirects-EW%20%2B%20API-6E3FF3)
+
 A migration of [frescopa.coffee](https://frescopa.coffee/) to an AEM Edge Delivery Services project with content in Document Authoring (da.live). It is built on the [`aemsites/da-block-collection`](https://github.com/aemsites/da-block-collection) template. The visual blocks, styles, fonts and icons are ported from the source project [`aem-showcase/frescopa`](https://github.com/aem-showcase/frescopa) (Apache-2.0).
 
 - **Content (DA):** https://da.live/#/jorgerzt/edsfrescopa. Pages are in the root (EN), `/en/`, `/es/`, `/fr/` and `/jp/`. Images are in `/media/`, header and footer in `nav` and `footer` (plus `/<locale>/nav|footer`), and the enquiry form in `/forms/enquire`.
@@ -23,20 +39,55 @@ The source references a few DAM assets that return 404 (for example `AdobeStock_
 
 ## Desarrollos en el portal
 
-What was built on top of the migrated site to show EDS capabilities, where to see each one working, and where its code, content and configuration live. Nothing in this list depends on Universal Editor or AEM Author: everything is an EDS capability, used here from Experience Workspace (da.live).
+Every capability, integration and use case in this project, and its status:
 
-| # | Development | Status | Try it | Docs |
+- ✅ **Implemented:** working in preview (https://main--edsfrescopa--jorgerzt.aem.page).
+- 🟡 **Partial:** works, with a known gap.
+- 📄 **Documented only:** explained in `docs/`, **not implemented**, because it needs something a demo site does not have (a connected production domain, an identity provider, a publish to live).
+
+Nothing here depends on Universal Editor or AEM Author: these are EDS capabilities, used from Experience Workspace (da.live).
+
+### Implemented and partial
+
+| Status | Capability | Use case it shows | Try it | Where it lives |
 | --- | --- | --- | --- | --- |
-| 1 | BYOM: a page served by an external system | Live in preview | [/integrations/byom](https://main--edsfrescopa--jorgerzt.aem.page/integrations/byom) | [docs/byom.md](docs/byom.md) |
-| 2 | json2html: external JSON + a Mustache template | Live in preview | [/integrations/json2html](https://main--edsfrescopa--jorgerzt.aem.page/integrations/json2html) | [docs/json2html.md](docs/json2html.md) |
-| 3 | Redirects authored in Experience Workspace | Live in preview | [/cafe](https://main--edsfrescopa--jorgerzt.aem.page/cafe) → /coffee | [docs/redirects.md](docs/redirects.md) |
-| 4 | Redirects defined by an external API | Live in preview | [/products/cold-brew-kit](https://main--edsfrescopa--jorgerzt.aem.page/products/cold-brew-kit) → /coffee | [docs/redirects.md](docs/redirects.md#redirects-defined-by-an-api) |
-| 5 | Multi-language site and language switcher | Live in preview | [/es/](https://main--edsfrescopa--jorgerzt.aem.page/es/), [/fr/](https://main--edsfrescopa--jorgerzt.aem.page/fr/), [/jp/](https://main--edsfrescopa--jorgerzt.aem.page/jp/) | This README |
-| 6 | Private area | Documented (patterns) | — | [docs/private-area.md](docs/private-area.md) |
-| 7 | Adobe Edge Functions | Documented (needs a connected domain) | — | [docs/edge-workers.md](docs/edge-workers.md) |
-| 8 | Reference architecture | Documented | [diagram](docs/architecture.svg) | [docs/architecture.md](docs/architecture.md) |
+| ✅ | **Migration of frescopa.coffee to EDS** | Move an AEM (xwalk) + Commerce site to EDS with content in documents | [Home](https://main--edsfrescopa--jorgerzt.aem.page/) | Whole repo; [differences from the source](#differences-from-the-source-site) |
+| ✅ | **Authoring in Experience Workspace (da.live)** | Business users edit pages and sheets as documents; preview and publish without developers | [da.live](https://da.live/#/jorgerzt/edsfrescopa) | da.live; sidekick in [`tools/sidekick`](tools/sidekick/config.json) |
+| ✅ | **Block library** (teaser, hero, cards, carousel, tabs, accordion, columns, table, quote, sticky-cta, reward, embed) | Reusable components: a table in the document → decorated HTML + CSS + JS | [/subscription](https://main--edsfrescopa--jorgerzt.aem.page/subscription) | [`blocks/`](blocks) |
+| ✅ | **Fragments and modals** (fragment, modal, header, footer) | Reuse content across pages; header and footer are documents too | Header and footer on every page | [`blocks/fragment`](blocks/fragment), [`blocks/modal`](blocks/modal) |
+| ✅ | **Content Fragment data as authored content** (offer, article, quiz) | Replace runtime GraphQL calls with rows authors edit | [/quiz](https://main--edsfrescopa--jorgerzt.aem.page/quiz), [/rise-and-shine](https://main--edsfrescopa--jorgerzt.aem.page/rise-and-shine) | [`blocks/quiz`](blocks/quiz), [`blocks/offer`](blocks/offer), [`blocks/article`](blocks/article) |
+| ✅ | **Product listing** with client-side sorting and count | Catalogue page without a commerce backend | [/coffee](https://main--edsfrescopa--jorgerzt.aem.page/coffee), [/machines](https://main--edsfrescopa--jorgerzt.aem.page/machines) | [`blocks/product-list-page-custom`](blocks/product-list-page-custom) |
+| ✅ | **Store locator** | Static locator panel | [/locations](https://main--edsfrescopa--jorgerzt.aem.page/locations) | [`blocks/store-locator`](blocks/store-locator) |
+| ✅ | **Dynamic Media** (dm-video, dm-scene7-template, video) | Images and video delivered from AEM Assets / Dynamic Media inside EDS | [/sustainability](https://main--edsfrescopa--jorgerzt.aem.page/sustainability) | [`blocks/dm-video`](blocks/dm-video), [`blocks/dm-scene7-template`](blocks/dm-scene7-template) |
+| ✅ | **Multi-language site** (`/en`, `/es`, `/fr`, `/jp`) with switcher and nav per locale | Localised sites from one codebase | [/es/](https://main--edsfrescopa--jorgerzt.aem.page/es/), [/jp/](https://main--edsfrescopa--jorgerzt.aem.page/jp/) | da.live folders; [`blocks/header`](blocks/header), `LOCALES` in [`scripts/scripts.js`](scripts/scripts.js) |
+| ✅ | **BYOM** | A page served by an external system (commerce, PIM, headless CMS) as EDS HTML | [/integrations/byom](https://main--edsfrescopa--jorgerzt.aem.page/integrations/byom) | Site overlay + my-custom-api · [docs/byom.md](docs/byom.md) |
+| ✅ | **json2html** | External JSON + a Mustache template in the repo = EDS page | [/integrations/json2html](https://main--edsfrescopa--jorgerzt.aem.page/integrations/json2html) | [`templates/json2html`](templates/json2html) · [docs/json2html.md](docs/json2html.md) |
+| ✅ | **Redirects authored in EW** | Authors manage 301s in a sheet; migrations with URL maps | [/cafe](https://main--edsfrescopa--jorgerzt.aem.page/cafe) → /coffee | `redirects` sheet in da.live · [docs/redirects.md](docs/redirects.md) |
+| ✅ | **Redirects defined by an API** | An external system owns some redirects; a GitHub Action syncs them into the same sheet | [/products/cold-brew-kit](https://main--edsfrescopa--jorgerzt.aem.page/products/cold-brew-kit) → /coffee | [`tools/redirects-sync`](tools/redirects-sync), [workflow](.github/workflows/redirects-sync.yaml) · [docs/redirects.md](docs/redirects.md#redirects-defined-by-an-api) |
+| ✅ | **Security baseline** | CSP with nonces moved to an HTTP header, `noindex` on the demo | View source on any page | [`head.html`](head.html) |
+| ✅ | **Performance by design** (eager / lazy / delayed loading) | Lighthouse 100 pattern: first section first, the rest later, third parties after 3 s | Any page | [`scripts/scripts.js`](scripts/scripts.js), [`scripts/delayed.js`](scripts/delayed.js) |
+| ✅ | **CI** | Lint on every push; event-driven or manual content jobs (redirects sync) | [Actions](https://github.com/JorgeRZT/edsfrescopa/actions) | [`.github/workflows`](.github/workflows) |
+| 🟡 | **Forms** (form, embed-adaptive-form) | Forms defined in documents | [/contact-us](https://main--edsfrescopa--jorgerzt.aem.page/contact-us) | Renders fully; **no submission backend** |
+| 🟡 | **Search** | Site search over the query index | [/search](https://main--edsfrescopa--jorgerzt.aem.page/search) | Block present; **query index not configured yet** |
+| 🟡 | **Translations** | Language copies exist; **translation projects in the EW app are not set up** | [/fr/](https://main--edsfrescopa--jorgerzt.aem.page/fr/) | da.live |
 
-The external service used by 1, 2 and 4 is [my-custom-api](https://my-custom-api.lopezpellicerjorge.workers.dev/llms.txt), a Cloudflare Worker that stands in for a commerce, PIM or headless CMS.
+### Documented only (not implemented)
+
+| Status | Capability | Use case | Why it is not implemented | Docs |
+| --- | --- | --- | --- | --- |
+| 📄 | **Private area** | Members-only section, intranet, B2B portal | Needs an identity provider, a protected site and site tokens on a published site | [docs/private-area.md](docs/private-area.md) |
+| 📄 | **Adobe Edge Functions** | Per-request logic at the CDN: headers, A/B, auth at the edge, real-time redirects | Needs a domain connected to the Adobe-managed CDN | [docs/edge-workers.md](docs/edge-workers.md) |
+| 📄 | **Adobe-managed CDN** (custom domain, `cdn.yaml`, purge) | Production go-live | Needs a production domain; the demo stays on `aem.page` | [docs/architecture.md](docs/architecture.md), [docs/edge-workers.md](docs/edge-workers.md) |
+| 📄 | **Redirects at request time** (wildcards, 302/307/308) | Pattern rules the sheet cannot express | Needs the CDN or Edge Functions (see above) | [docs/redirects.md](docs/redirects.md#other-ways-to-do-it-and-when) |
+| 📄 | **BYO Git** (GitLab, Bitbucket, Azure DevOps, GHE) | Customers that cannot use github.com | Needs Cloud Manager; this repo is on github.com | [docs/architecture.md](docs/architecture.md) |
+| 📄 | **Other content sources** (AEM Sites, commerce, headless CMS) | Mixing content sources behind one site | Shown with BYOM; no real third-party CMS connected | [docs/architecture.md](docs/architecture.md) |
+| — | **Blog** (listing with query index) | Editorial section | Not started | — |
+
+The external service behind BYOM, json2html and the API redirects is [my-custom-api](https://my-custom-api.lopezpellicerjorge.workers.dev/llms.txt), a Cloudflare Worker that stands in for a commerce, PIM or headless CMS.
+
+![Architecture](docs/architecture.svg)
+
+## How the integrations work
 
 ### 1. BYOM
 
@@ -64,25 +115,6 @@ The external service used by 1, 2 and 4 is [my-custom-api](https://my-custom-api
 - **How:** EDS only applies the `redirects` sheet, so the API is synced into it. [`tools/redirects-sync/sync-redirects.mjs`](tools/redirects-sync/sync-redirects.mjs) reads [the API](https://my-custom-api.lopezpellicerjorge.workers.dev/api/frescopa/redirects), keeps the authored rows, regenerates the rows with `Origin = API`, writes the sheet to da.live and previews it (or publishes it with `--publish`). Authored rows win on conflict.
 - **Trigger:** the GitHub Action [`.github/workflows/redirects-sync.yaml`](.github/workflows/redirects-sync.yaml), started by the external system (`repository_dispatch`, event `redirects-updated`), by hand or by a cron. It needs the `DA_TOKEN` secret; without it, it only runs a dry run.
 - **Where it lives:** script and workflow in this repo, endpoint `frescopa/redirects` in my-custom-api, rows with `Origin = API` in the same sheet.
-
-### 5. Multi-language site
-
-- **What:** language copies in `/en/`, `/es/`, `/fr/` and `/jp/`, each with its own `nav` and `footer`, and an EN/ES/FR/JP switcher in the header.
-- **Where it lives:** content folders in da.live and the `header` block. Translation projects with the Experience Workspace app are not set up yet.
-
-### 6. Private area
-
-Documented, not deployed: site authentication, a members-only section with login at the edge (protected repoless site + site token), and private data through an API. See [docs/private-area.md](docs/private-area.md).
-
-### 7. Adobe Edge Functions
-
-Documented, not deployed (they need a domain connected to the Adobe-managed CDN): where each piece runs and what an Edge Function would look like in this project. See [docs/edge-workers.md](docs/edge-workers.md).
-
-### 8. Reference architecture
-
-[docs/architecture.md](docs/architecture.md) shows how EDS, content sources (da.live, AEM Sites, commerce, headless CMS), the BYOM and json2html integrations, the code repo (GitHub or BYO Git) and the Adobe CDN fit together.
-
-![Architecture](docs/architecture.svg)
 
 ## Development
 
