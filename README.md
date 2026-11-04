@@ -35,6 +35,7 @@ Both pages are built when they are previewed or published. For per-request logic
 - **Architecture:** [docs/architecture.md](docs/architecture.md) shows how EDS, content sources (da.live, AEM Sites, commerce, headless CMS), the BYOM and json2html integrations, the code repo (GitHub or BYOGit) and the Adobe CDN fit together.
 
   ![Architecture](docs/architecture.svg)
+- **Redirects:** [docs/redirects.md](docs/redirects.md). A `redirects` sheet in da.live, for example [/cafe](https://main--edsfrescopa--jorgerzt.aem.page/cafe) → /coffee (301).
 - **Private areas:** [docs/private-area.md](docs/private-area.md) covers site authentication and a members-only section using edge login, a protected repoless site and a site token.
 
 ## Development
