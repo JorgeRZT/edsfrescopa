@@ -21,22 +21,68 @@ The source is an xwalk site (Universal Editor + AEM Author) with Adobe Commerce 
 
 The source references a few DAM assets that return 404 (for example `AdobeStock_278243111.jpeg` and the `/rise-and-shine` mp4). Those were dropped.
 
-## Integrations: BYOM, json2html and edge workers
+## Desarrollos en el portal
 
-Two pages are not authored in DA. Their content comes from an external service ([my-custom-api](https://my-custom-api.lopezpellicerjorge.workers.dev/llms.txt), a Cloudflare Worker):
+What was built on top of the migrated site to show EDS capabilities, where to see each one working, and where its code, content and configuration live. Nothing in this list depends on Universal Editor or AEM Author: everything is an EDS capability, used here from Experience Workspace (da.live).
 
-| Page | Technique | How |
-| --- | --- | --- |
-| [/integrations/byom](https://main--edsfrescopa--jorgerzt.aem.page/integrations/byom) | BYOM | The site's content **overlay** points at my-custom-api, which returns finished EDS HTML. Other paths return 404 there and fall back to da.live. See [docs/byom.md](docs/byom.md). |
-| [/integrations/json2html](https://main--edsfrescopa--jorgerzt.aem.page/integrations/json2html) | json2html | The overlay returns a 302 to Adobe's json2html worker. The worker renders JSON from my-custom-api with [`templates/json2html/todays-roasts.html`](templates/json2html/todays-roasts.html). See [docs/json2html.md](docs/json2html.md). |
+| # | Development | Status | Try it | Docs |
+| --- | --- | --- | --- | --- |
+| 1 | BYOM: a page served by an external system | Live in preview | [/integrations/byom](https://main--edsfrescopa--jorgerzt.aem.page/integrations/byom) | [docs/byom.md](docs/byom.md) |
+| 2 | json2html: external JSON + a Mustache template | Live in preview | [/integrations/json2html](https://main--edsfrescopa--jorgerzt.aem.page/integrations/json2html) | [docs/json2html.md](docs/json2html.md) |
+| 3 | Redirects authored in Experience Workspace | Live in preview | [/cafe](https://main--edsfrescopa--jorgerzt.aem.page/cafe) → /coffee | [docs/redirects.md](docs/redirects.md) |
+| 4 | Redirects defined by an external API | Live in preview | [/products/cold-brew-kit](https://main--edsfrescopa--jorgerzt.aem.page/products/cold-brew-kit) → /coffee | [docs/redirects.md](docs/redirects.md#redirects-defined-by-an-api) |
+| 5 | Multi-language site and language switcher | Live in preview | [/es/](https://main--edsfrescopa--jorgerzt.aem.page/es/), [/fr/](https://main--edsfrescopa--jorgerzt.aem.page/fr/), [/jp/](https://main--edsfrescopa--jorgerzt.aem.page/jp/) | This README |
+| 6 | Private area | Documented (patterns) | — | [docs/private-area.md](docs/private-area.md) |
+| 7 | Adobe Edge Functions | Documented (needs a connected domain) | — | [docs/edge-workers.md](docs/edge-workers.md) |
+| 8 | Reference architecture | Documented | [diagram](docs/architecture.svg) | [docs/architecture.md](docs/architecture.md) |
 
-Both pages are built when they are previewed or published. For per-request logic at the CDN (AEM Edge Functions), and how all these pieces fit together, see [docs/edge-workers.md](docs/edge-workers.md).
+The external service used by 1, 2 and 4 is [my-custom-api](https://my-custom-api.lopezpellicerjorge.workers.dev/llms.txt), a Cloudflare Worker that stands in for a commerce, PIM or headless CMS.
 
-- **Architecture:** [docs/architecture.md](docs/architecture.md) shows how EDS, content sources (da.live, AEM Sites, commerce, headless CMS), the BYOM and json2html integrations, the code repo (GitHub or BYOGit) and the Adobe CDN fit together.
+### 1. BYOM
 
-  ![Architecture](docs/architecture.svg)
-- **Redirects:** [docs/redirects.md](docs/redirects.md). A `redirects` sheet in da.live, for example [/cafe](https://main--edsfrescopa--jorgerzt.aem.page/cafe) → /coffee (301). Redirects owned by an external system arrive through an API and are synced into the same sheet (`tools/redirects-sync`, GitHub Action `redirects-sync.yaml`), for example [/products/cold-brew-kit](https://main--edsfrescopa--jorgerzt.aem.page/products/cold-brew-kit) → /coffee.
-- **Private areas:** [docs/private-area.md](docs/private-area.md) covers site authentication and a members-only section using edge login, a protected repoless site and a site token.
+- **What:** [/integrations/byom](https://main--edsfrescopa--jorgerzt.aem.page/integrations/byom) is not authored in DA. An external service returns finished EDS HTML (sections and block tables) and EDS treats it like any other document.
+- **How:** the site's content **overlay** (site config in the Admin API) points at `https://my-custom-api.lopezpellicerjorge.workers.dev/api/frescopa/byom`. EDS asks the overlay first; a 404 falls back to da.live, so only the paths the service knows are taken over.
+- **Where it lives:** site config (overlay), endpoint `frescopa/byom` in my-custom-api. No code in this repo: the page uses the existing blocks.
+- **When it updates:** when the page is previewed or published.
+
+### 2. json2html
+
+- **What:** [/integrations/json2html](https://main--edsfrescopa--jorgerzt.aem.page/integrations/json2html) is built from raw JSON (`frescopa/roasts`) and a template.
+- **How:** the overlay answers that path with a 302 to Adobe's json2html worker, which fetches the JSON and renders it with [`templates/json2html/todays-roasts.html`](templates/json2html/todays-roasts.html) (Mustache). The output is EDS HTML, decorated by the normal blocks.
+- **Where it lives:** template in this repo, json2html config for `jorgerzt/edsfrescopa`, JSON endpoint in my-custom-api.
+- **When it updates:** when the page is previewed or published.
+
+### 3. Redirects authored in Experience Workspace
+
+- **What:** 301 redirects such as [/cafe](https://main--edsfrescopa--jorgerzt.aem.page/cafe) → /coffee, [/maquinas](https://main--edsfrescopa--jorgerzt.aem.page/maquinas) → /machines and [/tiendas](https://main--edsfrescopa--jorgerzt.aem.page/tiendas) → /locations.
+- **How:** a `redirects` sheet in the root of the content with `Source` and `Destination` columns. Authors edit it in Experience Workspace and preview or publish it like any page. No code.
+- **Where it lives:** [`redirects`](https://da.live/sheet#/jorgerzt/edsfrescopa/redirects) in da.live, rows with `Origin = EW`.
+
+### 4. Redirects defined by an external API
+
+- **What:** the (fictional) Fréscopa commerce decides redirects when it retires products, closes stores or ends campaigns, for example [/products/cold-brew-kit](https://main--edsfrescopa--jorgerzt.aem.page/products/cold-brew-kit) → /coffee and [/stores/madrid-gran-via](https://main--edsfrescopa--jorgerzt.aem.page/stores/madrid-gran-via) → /locations.
+- **How:** EDS only applies the `redirects` sheet, so the API is synced into it. [`tools/redirects-sync/sync-redirects.mjs`](tools/redirects-sync/sync-redirects.mjs) reads [the API](https://my-custom-api.lopezpellicerjorge.workers.dev/api/frescopa/redirects), keeps the authored rows, regenerates the rows with `Origin = API`, writes the sheet to da.live and previews it (or publishes it with `--publish`). Authored rows win on conflict.
+- **Trigger:** the GitHub Action [`.github/workflows/redirects-sync.yaml`](.github/workflows/redirects-sync.yaml), started by the external system (`repository_dispatch`, event `redirects-updated`), by hand or by a cron. It needs the `DA_TOKEN` secret; without it, it only runs a dry run.
+- **Where it lives:** script and workflow in this repo, endpoint `frescopa/redirects` in my-custom-api, rows with `Origin = API` in the same sheet.
+
+### 5. Multi-language site
+
+- **What:** language copies in `/en/`, `/es/`, `/fr/` and `/jp/`, each with its own `nav` and `footer`, and an EN/ES/FR/JP switcher in the header.
+- **Where it lives:** content folders in da.live and the `header` block. Translation projects with the Experience Workspace app are not set up yet.
+
+### 6. Private area
+
+Documented, not deployed: site authentication, a members-only section with login at the edge (protected repoless site + site token), and private data through an API. See [docs/private-area.md](docs/private-area.md).
+
+### 7. Adobe Edge Functions
+
+Documented, not deployed (they need a domain connected to the Adobe-managed CDN): where each piece runs and what an Edge Function would look like in this project. See [docs/edge-workers.md](docs/edge-workers.md).
+
+### 8. Reference architecture
+
+[docs/architecture.md](docs/architecture.md) shows how EDS, content sources (da.live, AEM Sites, commerce, headless CMS), the BYOM and json2html integrations, the code repo (GitHub or BYO Git) and the Adobe CDN fit together.
+
+![Architecture](docs/architecture.svg)
 
 ## Development
 
