@@ -114,6 +114,7 @@ Recommendation: keep exact redirects as content (sheet, synced if needed) and re
 - Changes follow the usual flow. Preview the sheet and test on `.page`, then publish it for `.live` and production.
 - If the workbook has several sheets, only the one named `helix-default` is used for redirects.
 - The redirects are evaluated before the BYOM content overlay, so they work alongside the [BYOM](byom.md) and [json2html](json2html.md) setup.
+- **Troubleshooting:** AEM only materialises the redirects that changed since the last preview (or publish) of the sheet. If a redirect works on `.live` but returns 404 on `.page`, previewing the same sheet again won't fix it: preview it once without those rows and then again with them. The [seed script](../tools/seed-content) already does this (empty sheet → real sheet), so a freshly seeded site gets all redirects on preview.
 
 ```bash
 curl -sI https://main--edsfrescopa--jorgerzt.aem.page/cafe | grep -iE '^(HTTP|location)'

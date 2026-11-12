@@ -122,7 +122,7 @@ async function pool(items, fn) {
 
 const files = walk(ROOT).sort();
 const toPreview = files
-  .filter((f) => PREVIEW_EXT.includes(f.split('.').pop()) && !f.startsWith('/drafts/'))
+  .filter((f) => PREVIEW_EXT.includes(f.split('.').pop()) && !f.startsWith('/drafts/') && f !== '/redirects.json')
   .map((f) => f.replace(/\.html$/, ''));
 
 console.log(`Contenido demo: ${files.length} ficheros (${toPreview.length} páginas/hojas para preview)`);
@@ -183,4 +183,23 @@ if (!preview.ok) {
 }
 const job = await preview.json().catch(() => ({}));
 console.log(`✔ Preview en curso${job?.links?.self ? `: ${job.links.self}` : ''}`);
+
+// AEM only materialises the redirects that differ from the previous preview of
+// /redirects.json, so preview an empty sheet first and then the real one.
+async function previewRedirects() {
+  const rel = '/redirects.json';
+  const sheet = JSON.parse(await bodyFor(rel).text());
+  const put = async (body) => {
+    const form = new FormData();
+    form.append('data', new Blob([JSON.stringify(body)], { type: 'application/json' }));
+    const up = await request(`${DA_ADMIN}/source/${ORG}/${SITE}${rel}`, { method: 'POST', headers: auth, body: form });
+    const pv = await request(`${HLX_ADMIN}/preview/${ORG}/${SITE}/${REF}${rel}`, { method: 'POST', headers: auth });
+    return up.ok && pv.ok;
+  };
+  const ok = await put({
+    ...sheet, total: 0, limit: 0, data: [],
+  }) && await put(sheet);
+  return ok ? `${sheet.data.length} redirecciones activas en preview` : 'no se pudieron activar en preview (revisa /redirects.json)';
+}
+if (files.includes('/redirects.json')) console.log(`✔ Redirects: ${await previewRedirects()}`);
 console.log(`  https://${REF}--${SITE}--${ORG}.aem.page/`);
