@@ -143,7 +143,7 @@ A GitHub template copies only the code: in EDS the code lives in GitHub and the 
    ```
 
    The script stops if the site is not empty; `--force` overwrites matching paths, `--no-preview` skips the preview and `--dry-run` only lists the files. Links to `content.da.live/jorgerzt/edsfrescopa/…` are rewritten to your org and site.
-5. Replicate the integrations configuration (search and sitemaps, json2html, BYOM overlay). It lives in the configuration service and the json2html worker, not in the repo, so the template cannot carry it. [`tools/setup-integrations/setup.mjs`](tools/setup-integrations/setup.mjs) applies it to your site with the same IMS token (your user must be an admin of the site) and previews `/integrations/byom` and `/integrations/json2html`:
+5. Install the integrations (search and sitemaps, json2html, BYOM overlay) with the setup script. Always use this script rather than configuring them by hand: the configuration lives in the configuration service and the json2html worker, not in the repo, so the template cannot carry it. [`tools/setup-integrations/setup.mjs`](tools/setup-integrations/setup.mjs) applies it to your site with the same IMS token (your user must be an admin of the site) and previews `/integrations/byom` and `/integrations/json2html`:
 
    ```sh
    ORG=<github-org> SITE=<repo-name> npm run setup:integrations
