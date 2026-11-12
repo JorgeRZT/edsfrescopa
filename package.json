@@ -13,6 +13,7 @@
     "build:json:filters": "merge-json-cli -i \"ue/models/component-filters.json\" -o \"component-filters.json\"",
     "seed:content": "node tools/seed-content/seed.mjs",
     "export:content": "node tools/seed-content/export.mjs",
+    "setup:integrations": "node tools/setup-integrations/setup.mjs",
     "prepare": "husky"
   },
   "repository": {

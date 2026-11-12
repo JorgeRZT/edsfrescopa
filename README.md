@@ -143,9 +143,22 @@ A GitHub template copies only the code: in EDS the code lives in GitHub and the 
    ```
 
    The script stops if the site is not empty; `--force` overwrites matching paths, `--no-preview` skips the preview and `--dry-run` only lists the files. Links to `content.da.live/jorgerzt/edsfrescopa/…` are rewritten to your org and site.
-5. Publish from da.live or the Sidekick when you need the `aem.live` URLs, the query index or the sitemaps.
+5. Replicate the integrations configuration (search and sitemaps, json2html, BYOM overlay). It lives in the configuration service and the json2html worker, not in the repo, so the template cannot carry it. [`tools/setup-integrations/setup.mjs`](tools/setup-integrations/setup.mjs) applies it to your site with the same IMS token (your user must be an admin of the site) and previews `/integrations/byom` and `/integrations/json2html`:
 
-**Not included in the seed** (site configuration, not content): the search and sitemap config ([`tools/search-config`](tools/search-config), apply it with your token), the BYOM overlay, the json2html config and the external redirects API. Configure these per site as described in [How the integrations work](#how-the-integrations-work).
+   ```sh
+   ORG=<github-org> SITE=<repo-name> npm run setup:integrations
+   ```
+
+   - **search**: pushes [`tools/search-config`](tools/search-config) with the sitemap and robots host rewritten to `main--<repo>--<org>.aem.live`. Publish the site to generate `/query-index.json` and the sitemaps.
+   - **json2html**: registers `/integrations/json2html` in the json2html worker for your site, with the template from your own repo and the shared demo JSON.
+   - **overlay**: `--overlay=byom` (default) is the Fréscopa setup: the shared demo API serves `/integrations/byom` and redirects `/integrations/json2html` to the json2html worker of the Fréscopa site, so that page uses the Fréscopa template. `--overlay=json2html` makes your site's json2html worker the overlay instead (standard json2html setup: the page uses your template, and `/integrations/byom` no longer exists). `--overlay=none` leaves the overlay untouched.
+   - `--only=search,json2html,overlay` runs a subset, `--no-preview` skips the preview and `--dry-run` only prints the calls.
+
+   The BYOM page and the json2html data come from a shared, read-only demo API (`my-custom-api`); to change them, point the overlay and the json2html `endpoint` at your own service.
+
+6. Publish from da.live or the Sidekick when you need the `aem.live` URLs, the query index or the sitemaps.
+
+**Not included** (outside the site config): the external redirects API used by [`tools/redirects-sync`](tools/redirects-sync) (set `REDIRECTS_API`, see [docs/redirects.md](docs/redirects.md)), and anything on the Adobe Managed CDN (edge functions, private area), which needs Cloud Manager.
 
 To refresh the snapshot after editing the source site, run `npm run export:content` and commit `demo-content/`.
 
