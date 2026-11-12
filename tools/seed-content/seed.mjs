@@ -122,7 +122,7 @@ async function pool(items, fn) {
 
 const files = walk(ROOT).sort();
 const toPreview = files
-  .filter((f) => PREVIEW_EXT.includes(f.split('.').pop()) && !f.startsWith('/drafts/') && !f.startsWith('/docs/'))
+  .filter((f) => PREVIEW_EXT.includes(f.split('.').pop()) && !f.startsWith('/drafts/'))
   .map((f) => f.replace(/\.html$/, ''));
 
 console.log(`Contenido demo: ${files.length} ficheros (${toPreview.length} páginas/hojas para preview)`);

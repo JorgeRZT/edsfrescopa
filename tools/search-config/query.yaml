@@ -23,6 +23,7 @@ indices:
       - '/forms/**'
       - '/drafts/**'
       - '/fragments/**'
+      - '/docs/**'
     target: /query-index.json
     properties:
       title:
@@ -55,6 +56,7 @@ indices:
       - '/forms/**'
       - '/drafts/**'
       - '/fragments/**'
+      - '/docs/**'
     target: /es/query-index.json
     properties:
       title:
@@ -87,6 +89,7 @@ indices:
       - '/forms/**'
       - '/drafts/**'
       - '/fragments/**'
+      - '/docs/**'
     target: /fr/query-index.json
     properties:
       title:
@@ -119,6 +122,7 @@ indices:
       - '/forms/**'
       - '/drafts/**'
       - '/fragments/**'
+      - '/docs/**'
     target: /jp/query-index.json
     properties:
       title:
