@@ -10,6 +10,9 @@
  * - Reescribe las referencias al sitio de origen (/jorgerzt/edsfrescopa) por /{org}/{site}.
  * - Hace preview masivo de páginas y hojas con el Admin API
  *   (POST https://admin.hlx.page/preview/{org}/{site}/{ref}/*).
+ * - Activa la Library de da.live (Blocks, Templates, Icons de `docs/library/`) añadiendo la
+ *   hoja `library` a la configuración del sitio (https://admin.da.live/config/{org}/{site}/),
+ *   conservando el resto de hojas que ya existan.
  *
  * Uso:  DA_TOKEN=... ORG=<org> SITE=<site> node tools/seed-content/seed.mjs
  *         [--dry-run] [--force] [--no-preview]
@@ -25,6 +28,12 @@ const {
   ORG, SITE, REF = 'main', CONCURRENCY = '5',
 } = process.env;
 const SOURCE_PREFIX = '/jorgerzt/edsfrescopa';
+const SOURCE_HOST = '--edsfrescopa--jorgerzt.';
+const LIBRARY = [
+  { title: 'Blocks', path: '/docs/library/blocks.json' },
+  { title: 'Templates', path: '/docs/library/templates.json' },
+  { title: 'Icons', path: '/docs/library/icons.json' },
+];
 const DA_ADMIN = 'https://admin.da.live';
 const HLX_ADMIN = 'https://admin.hlx.page';
 
@@ -79,7 +88,8 @@ function bodyFor(rel) {
   const ext = rel.split('.').pop().toLowerCase();
   const buf = fs.readFileSync(path.join(ROOT, rel));
   if (TEXT_TYPES[ext]) {
-    const text = buf.toString('utf8').replaceAll(SOURCE_PREFIX, `/${ORG}/${SITE}`);
+    const text = buf.toString('utf8').replaceAll(SOURCE_PREFIX, `/${ORG}/${SITE}`)
+      .replaceAll(SOURCE_HOST, `--${SITE}--${ORG}.`);
     return new Blob([text], { type: TEXT_TYPES[ext] });
   }
   return new Blob([buf], { type: MEDIA_TYPES[ext] || 'application/octet-stream' });
@@ -112,7 +122,7 @@ async function pool(items, fn) {
 
 const files = walk(ROOT).sort();
 const toPreview = files
-  .filter((f) => PREVIEW_EXT.includes(f.split('.').pop()) && !f.includes('/drafts/'))
+  .filter((f) => PREVIEW_EXT.includes(f.split('.').pop()) && !f.startsWith('/drafts/') && !f.startsWith('/docs/'))
   .map((f) => f.replace(/\.html$/, ''));
 
 console.log(`Contenido demo: ${files.length} ficheros (${toPreview.length} páginas/hojas para preview)`);
@@ -136,6 +146,29 @@ if (errors.length) {
   process.exit(1);
 }
 console.log(`✔ ${files.length} ficheros subidos`);
+
+async function configureLibrary() {
+  const url = `${DA_ADMIN}/config/${ORG}/${SITE}/`;
+  const current = await request(url, { headers: auth });
+  let config = current.ok ? await current.json() : {};
+  if (config[':type'] !== 'multi-sheet') {
+    const sheets = config.data ? { data: { ...config, data: config.data } } : {};
+    config = {
+      ...sheets, ':names': Object.keys(sheets), ':version': 3, ':type': 'multi-sheet',
+    };
+  }
+  if (config.library && !FORCE) return 'ya existía, no se modifica (usa --force para reemplazarla)';
+  config.library = {
+    total: LIBRARY.length, limit: LIBRARY.length, offset: 0, data: LIBRARY,
+  };
+  config[':names'] = [...new Set([...(config[':names'] || []), 'library'])];
+  const form = new FormData();
+  form.append('config', JSON.stringify(config));
+  const resp = await request(url, { method: 'POST', headers: auth, body: form });
+  if (!resp.ok) fail(`No se pudo guardar la configuración del sitio (${resp.status}). ¿Eres admin del sitio?`);
+  return 'configurada (Blocks, Templates, Icons)';
+}
+console.log(`✔ Library de da.live ${await configureLibrary()}`);
 
 if (NO_PREVIEW) process.exit(0);
 

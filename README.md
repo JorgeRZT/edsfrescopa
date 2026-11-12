@@ -131,7 +131,7 @@ The external service behind BYOM, json2html and the API redirects is [my-custom-
 
 ## Use this repo as a template (code + demo content)
 
-A GitHub template copies only the code: in EDS the code lives in GitHub and the content in da.live. To get the Fréscopa content as well, this repo ships a snapshot of the da.live site in [`demo-content/`](demo-content) (75 pages, 73 images and the `redirects` sheet). It is excluded from the code bus by [`.hlxignore`](.hlxignore). [`tools/seed-content/seed.mjs`](tools/seed-content/seed.mjs) uploads it to your site with the DA Source API, the same way `da.live/start` copies its demo content.
+A GitHub template copies only the code: in EDS the code lives in GitHub and the content in da.live. To get the Fréscopa content as well, this repo ships a snapshot of the da.live site in [`demo-content/`](demo-content) (75 pages, 73 images, the `redirects` sheet and the da.live Library in `docs/library`). It is excluded from the code bus by [`.hlxignore`](.hlxignore). [`tools/seed-content/seed.mjs`](tools/seed-content/seed.mjs) uploads it to your site with the DA Source API, the same way `da.live/start` copies its demo content.
 
 1. Click **Use this template** and create the repo in your GitHub org.
 2. Install the [AEM Code Sync](https://github.com/apps/aem-code-sync) GitHub app on the new repo.
@@ -142,7 +142,7 @@ A GitHub template copies only the code: in EDS the code lives in GitHub and the 
    ORG=<github-org> SITE=<repo-name> npm run seed:content
    ```
 
-   The script stops if the site is not empty; `--force` overwrites matching paths, `--no-preview` skips the preview and `--dry-run` only lists the files. Links to `content.da.live/jorgerzt/edsfrescopa/…` are rewritten to your org and site.
+   The script stops if the site is not empty; `--force` overwrites matching paths, `--no-preview` skips the preview and `--dry-run` only lists the files. Links to `content.da.live/jorgerzt/edsfrescopa/…` and `main--edsfrescopa--jorgerzt` are rewritten to your org and site. The script also adds the `library` sheet to the da.live site configuration, so **Library → Blocks, Templates and Icons** appears in the editor (an existing `library` sheet is kept unless you pass `--force`). The library docs under `/docs/` are not previewed.
 5. Install the integrations (search and sitemaps, json2html, BYOM overlay) with the setup script. Always use this script rather than configuring them by hand: the configuration lives in the configuration service and the json2html worker, not in the repo, so the template cannot carry it. [`tools/setup-integrations/setup.mjs`](tools/setup-integrations/setup.mjs) applies it to your site with the same IMS token (your user must be an admin of the site) and previews `/integrations/byom` and `/integrations/json2html`:
 
    ```sh
