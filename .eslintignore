@@ -6,3 +6,4 @@ blocks/form/rules/model/*
 blocks/form/rules/functionRegistration.js
 blocks/video/videojs/video.min.js
 demo/
+demo-content/

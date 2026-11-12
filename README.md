@@ -129,6 +129,26 @@ The external service behind BYOM, json2html and the API redirects is [my-custom-
 - **When it updates:** on publish or unpublish. Preview-only pages are not indexed.
 - **Details:** [docs/search-and-sitemaps.md](docs/search-and-sitemaps.md).
 
+## Use this repo as a template (code + demo content)
+
+A GitHub template copies only the code: in EDS the code lives in GitHub and the content in da.live. To get the Fréscopa content as well, this repo ships a snapshot of the da.live site in [`demo-content/`](demo-content) (75 pages, 73 images and the `redirects` sheet). It is excluded from the code bus by [`.hlxignore`](.hlxignore). [`tools/seed-content/seed.mjs`](tools/seed-content/seed.mjs) uploads it to your site with the DA Source API, the same way `da.live/start` copies its demo content.
+
+1. Click **Use this template** and create the repo in your GitHub org.
+2. Install the [AEM Code Sync](https://github.com/apps/aem-code-sync) GitHub app on the new repo.
+3. Open [da.live/start](https://da.live/start), paste the repo URL and choose **no demo content**.
+4. Sign in to Adobe IMS (`npx -y github:adobe-rnd/da-auth-helper token`, stored in `~/.aem/da-token.json`) or export `DA_TOKEN`. Then seed the content and run a bulk preview:
+
+   ```sh
+   ORG=<github-org> SITE=<repo-name> npm run seed:content
+   ```
+
+   The script stops if the site is not empty; `--force` overwrites matching paths, `--no-preview` skips the preview and `--dry-run` only lists the files. Links to `content.da.live/jorgerzt/edsfrescopa/…` are rewritten to your org and site.
+5. Publish from da.live or the Sidekick when you need the `aem.live` URLs, the query index or the sitemaps.
+
+**Not included in the seed** (site configuration, not content): the search and sitemap config ([`tools/search-config`](tools/search-config), apply it with your token), the BYOM overlay, the json2html config and the external redirects API. Configure these per site as described in [How the integrations work](#how-the-integrations-work).
+
+To refresh the snapshot after editing the source site, run `npm run export:content` and commit `demo-content/`.
+
 ## Development
 
 ```sh
